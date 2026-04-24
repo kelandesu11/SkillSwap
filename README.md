@@ -20,3 +20,9 @@ Sprint 1 sets up the service foundations:
 ## Run
 ```bash
 docker compose up --build
+```
+
+## Health Checks
+Identity: http://localhost:8001/health
+Session: http://localhost:8002/health
+Notification: http://localhost:8003/health
