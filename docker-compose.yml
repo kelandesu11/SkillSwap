@@ -12,6 +12,7 @@ services:
       - "5432:5432"
     volumes:
       - skillswap_postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   identity-profile-service:
     build: ./identity-profile-service
