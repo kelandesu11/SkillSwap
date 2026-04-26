@@ -8,14 +8,14 @@ SkillSWap is a peer skill-exchange platform built as a FastAPO microservices bac
 - Nginx API Gateway
 - PostgresSQL
 
-## Sprint 1 status
-Sprint 1 sets up the service foundations:
-- repository scaffold
-- Dockerfiles
-- docker-compose
-- PostgresSQL
-- helath endpoints
-- intital service structure
+### Sprint 1 - Foundations
+- Repository scaffolded
+- Dockerfiles added
+- docker-compose added
+- PostgreSQL configured
+- Health endpoints created
+- Core models and schemas started
+- Base CRUD endpoints added
 
 ## Run
 ```bash

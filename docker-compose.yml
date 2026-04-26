@@ -12,12 +12,20 @@ services:
       - "5432:5432"
     volumes:
       - skillswap_postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   identity-profile-service:
     build: ./identity-profile-service
     container_name: identity-profile-service
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "8001:8000"
 
@@ -25,7 +33,8 @@ services:
     build: ./session-service
     container_name: session-service
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "8002:8000"
 
@@ -33,7 +42,8 @@ services:
     build: ./notification-service
     container_name: notification-service
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "8003:8000"
 
