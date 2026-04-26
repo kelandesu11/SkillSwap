@@ -36,3 +36,53 @@
 
 ### Next step
 - Add DB initialization and basic models for identity, notification, and session services
+
+
+## Date: 2026-04-26
+
+### Goal for today
+- Complete Sprint 1 core models and endpoints
+- Fix Docker and database startup issues
+
+### What I completed
+- Added profile, session, and notification models
+- Added schemas and CRUD endpoints
+- Added postgres init script for separate databases
+- Fixed Docker dependency startup timing
+- Fixed identity service database name mismatch
+- Updated README documentation
+
+### Services touched
+- identity-profile-service
+- session-service
+- notification-service
+- postgres
+- nginx
+
+### Endpoints completed
+- POST /api/v1/profiles
+- GET /api/v1/profiles
+- GET /api/v1/profiles/{id}
+- PATCH /api/v1/profiles/{id}
+
+- POST /api/v1/sessions
+- GET /api/v1/sessions
+- GET /api/v1/sessions/{id}
+- PATCH /api/v1/sessions/{id}/status
+
+- POST /api/v1/notifications
+- GET /api/v1/notifications
+- GET /api/v1/notifications/profile/{profile_id}
+
+### Gateway / auth / integration completed
+- Nginx foundation added
+- Service startup dependencies improved
+
+### Testing / CI completed
+- Manual container startup validation
+
+### Blockers
+- None currently
+
+### Next step
+- Begin Sprint 2 authentication and JWT setup
