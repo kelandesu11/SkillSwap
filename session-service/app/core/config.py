@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     app_name: str = "Session Service"
     app_version: str = "0.1.0"
-    database_url: str = "postgresql+psycopg://postgres:Km15578!@localhost:5432/sessions_db"
+    database_url: str = "postgresql+psycopg://postgres:Km15578!@postgres:5432/sessions_db"
 
     model_config = SettingsConfigDict(
         env_file=".env", 
