@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     jwt_secret_key: str = "secret-key"
     jwt_algorithm: str = "HS256"
 
+    identity_service_url: str = "http://identity-profile-service:8000"
+    notification_service_url: str = "http://notification-service:8000"
+    service_request_timeout_seconds: float
+
     model_config = SettingsConfigDict(
         env_file=".env", 
         env_file_encoding="utf-8",
