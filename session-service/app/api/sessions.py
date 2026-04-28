@@ -1,6 +1,9 @@
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
+from app.core.auth import get_current_user_claims
 from app.db.database import SessionLocal
 from app.models.session import SkillSession
 from app.schemas.session import SessionCreate, SessionOut, SessionStatusUpdate
@@ -17,7 +20,11 @@ def get_db():
 
 
 @router.post("", response_model=SessionOut)
-def create_session(payload: SessionCreate, db: Session = Depends(get_db)):
+def create_session(
+    payload: SessionCreate,
+    db: Session = Depends(get_db),
+    claims: dict[str, Any] = Depends(get_current_user_claims),
+):
     session = SkillSession(**payload.model_dump())
     db.add(session)
     db.commit()
@@ -26,7 +33,11 @@ def create_session(payload: SessionCreate, db: Session = Depends(get_db)):
 
 
 @router.get("", response_model=list[SessionOut])
-def list_sessions(status: str | None = Query(default=None), db: Session = Depends(get_db)):
+def list_sessions(
+    status: str | None = Query(default=None),
+      db: Session = Depends(get_db),
+      claims: dict[str, Any] = Depends(get_current_user_claims),
+):
     query = db.query(SkillSession)
 
     if status:
@@ -36,7 +47,11 @@ def list_sessions(status: str | None = Query(default=None), db: Session = Depend
 
 
 @router.get("/{session_id}", response_model=SessionOut)
-def get_session(session_id: int, db: Session = Depends(get_db)):
+def get_session(
+    session_id: int,
+    db: Session = Depends(get_db),
+    claims: dict[str, Any] = Depends(get_current_user_claims),
+):
     session = db.get(SkillSession, session_id)
 
     if not session:
@@ -50,6 +65,7 @@ def update_session_status(
     session_id: int,
     payload: SessionStatusUpdate,
     db: Session = Depends(get_db),
+    claims: dict[str, Any] = Depends(get_current_user_claims),
 ):
     session = db.get(SkillSession, session_id)
 
