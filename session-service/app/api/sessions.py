@@ -1,6 +1,6 @@
 from typing import Any
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 
 from app.clients.identity_client import validate_profile_exists
@@ -24,10 +24,13 @@ def get_db():
 @router.post("", response_model=SessionOut)
 def create_session(
     payload: SessionCreate,
+    request: Request,
     authorization: str = Header(...),
     db: Session = Depends(get_db),
     claims: dict[str, Any] = Depends(get_current_user_claims),
 ):
+    request_id = request.state.request_id
+    
     validate_profile_exists(payload.requester_profile_id, authorization)
     validate_profile_exists(payload.mentor_profile_id, authorization)
 
@@ -39,6 +42,7 @@ def create_session(
     create_notification(
         profile_id=payload.mentor_profile_id,
         message=f"New session request for {payload.requested_skill}",
+        request_id=request_id,
         notification_type="session_requested",
         authorization=authorization,
     )
@@ -78,10 +82,13 @@ def get_session(
 def update_session_status(
     session_id: int,
     payload: SessionStatusUpdate,
+    request: Request,
     authorization: str = Header(...),
     db: Session = Depends(get_db),
     claims: dict[str, Any] = Depends(get_current_user_claims),
 ):
+    request_id = request.state.request_id
+
     session = db.get(SkillSession, session_id)
 
     if not session:
@@ -97,6 +104,7 @@ def update_session_status(
             message=f"Your session request for {session.requested_skill} was {payload.status}",
             notification_type=f"session_{payload.status}",
             authorization=authorization,
+            request_id=request_id,
         )
 
     return session

@@ -13,6 +13,7 @@ def create_notification(
     message: str,
     notification_type: str,
     authorization: str,
+    request_id: str
 ) -> bool:
     url = f"{settings.notification_service_url}/api/v1/notifications"
 
@@ -27,15 +28,44 @@ def create_notification(
         response = httpx.post(
             url,
             json=payload,
-            headers={"Authorization": authorization},
+            headers={
+                "Authorization": authorization,
+                "X-Request-ID": request_id,
+            },
             timeout=settings.service_request_timeout_seconds,
         )
     except httpx.TimeoutException:
-        logger.error("Notification Service timed out")
+        logger.error(
+            {
+                "request_id": request_id,
+                "downstream": "notification-service",
+                "target": url,
+                "success": False,
+                "error": "timeout",
+            }
+        )
         return False
     except httpx.RequestError:
-        logger.error("Notification Service is unavailable")
+        logger.error(
+            {
+                "request_id": request_id,
+                "downstream": "notification-service",
+                "target": url,
+                "success": False,
+                "error": "request_error",
+            }
+        )
         return False
+    
+    logger.info(
+        {
+            "request_id": request_id,
+            "downstream": "notification-service",
+            "target": url,
+            "success": response.status_code < 400,
+            "status_code": response.status_code,
+        }
+    )
 
     if response.status_code >= 400:
         logger.error(
