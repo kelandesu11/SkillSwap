@@ -86,3 +86,44 @@
 
 ### Next step
 - Begin Sprint 2 authentication and JWT setup
+
+## Date: 2026-05-01
+
+### Goal for today
+- Finalize Sprint 2 gateway routing
+- Verify the end-to-end SkillSwap session flow through Nginx
+
+### What I completed
+- Updated Nginx routing for auth, MFA, profiles, sessions, and notifications
+- Confirmed gateway routes point to the correct services
+- Added Authorization and X-Request-ID header forwarding
+- Documented the Sprint 2 end-to-end flow
+- Added manual testing steps to README
+
+### Services touched
+- nginx
+- identity-profile-service
+- session-service
+- notification-service
+
+### Endpoints completed
+- /api/v1/auth/*
+- /api/v1/mfa/*
+- /api/v1/profiles/*
+- /api/v1/sessions/*
+- /api/v1/notifications/*
+
+### Gateway / auth / integration completed
+- Finalized Nginx API routing
+- Preserved Authorization header through gateway
+- Preserved X-Request-ID header through gateway
+- Verified expected gateway flow for Sprint 2
+
+### Testing / CI completed
+- Manual gateway testing planned through localhost:8080
+
+### Blockers
+- None currently
+
+### Next step
+- Begin Sprint 3 automated tests and GitHub Actions CI
