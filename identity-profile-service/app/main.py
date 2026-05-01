@@ -5,6 +5,7 @@ from app.api.health import router as health_router
 from app.api.mfa import router as mfa_router
 from app.api.profiles import router as profiles_router
 from app.core.config import get_settings
+from app.core.middleware import RequestLoggingMiddleware
 from app.db.database import Base, engine
 import app.models
 
@@ -14,6 +15,8 @@ app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
 )
+
+app.add_middleware(RequestLoggingMiddleware)
 
 Base.metadata.create_all(bind=engine)
 
