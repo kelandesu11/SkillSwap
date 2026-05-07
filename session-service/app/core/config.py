@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
     identity_service_url: str = "http://identity-profile-service:8000"
     notification_service_url: str = "http://notification-service:8000"
-    service_request_timeout_seconds: float
+    service_request_timeout_seconds: float = 5.0
 
     model_config = SettingsConfigDict(
         env_file=".env", 
