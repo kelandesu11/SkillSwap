@@ -39,5 +39,6 @@ jobs:
         working-directory: ${{ matrix.service }}
         env:
           PYTHONPATH: .
+          DATABASE_URL: sqlite:///./test.db
         run: |
           pytest
