@@ -1,6 +1,5 @@
 
 ### `DAILY_PROGRESS.md`
-```md
 ## Date: 2026-04-24
 ### Goal for today
 - Set up Sprint 1 foundations for SkillSwap
@@ -86,3 +85,53 @@
 
 ### Next step
 - Begin Sprint 2 authentication and JWT setup
+
+
+## Date: 2026-05-01
+
+### Goal for today
+- Start Sprint 3 testing and CI/CD work
+- Add pytest coverage and GitHub Actions workflow
+
+### What I completed
+- Added pytest setup for services
+- Added auth tests for register, login, and current user flow
+- Added session route protection tests
+- Added notification route protection tests
+- Added GitHub Actions CI workflow
+- Fixed PYTHONPATH issue in GitHub Actions
+- Configured CI to use SQLite test database
+- Fixed missing config defaults for session service tests
+- Updated bcrypt dependency compatibility for auth tests
+
+### Services touched
+- identity-profile-service
+- session-service
+- notification-service
+- GitHub Actions
+
+### Endpoints completed
+- Tested POST /api/v1/auth/register
+- Tested POST /api/v1/auth/login
+- Tested GET /api/v1/auth/me
+- Tested protected session routes
+- Tested protected notification routes
+
+### Gateway / auth / integration completed
+- No new gateway changes
+- Auth test coverage added
+- Protected route test coverage added
+
+### Testing / CI completed
+- Added pytest
+- Added CI workflow
+- Added service test matrix
+- Added SQLite database override for CI tests
+- Fixed CI dependency and import issues
+
+### Blockers
+- None currently
+
+### Next step
+- Confirm GitHub Actions passes
+- Finish Sprint 3 PR review and merge
