@@ -10,11 +10,11 @@ The project was built using FastAPI, PostgreSQL, Docker Compose, Nginx, JWT auth
 
 The platform allows users to:
 
-- register and authenticate
-- enable MFA using TOTP
-- create public skill profiles
-- request mentoring or skill-sharing sessions
-- receive notifications related to sessions
+* register and authenticate
+* enable MFA using TOTP
+* create public skill profiles
+* request mentoring or skill-sharing sessions
+* receive notifications related to sessions
 
 The system is split into multiple services to simulate a production-style backend architecture.
 
@@ -26,11 +26,11 @@ The system uses a microservices architecture.
 
 Services:
 
-- Identity & Profile Service
-- Session Service
-- Notification Service
-- Nginx API Gateway
-- PostgreSQL databases
+* Identity & Profile Service
+* Session Service
+* Notification Service
+* Nginx API Gateway
+* PostgreSQL databases
 
 Each service has its own database and responsibilities.
 
@@ -44,15 +44,15 @@ Communication happens over REST APIs inside the Docker network.
 
 Responsible for:
 
-- authentication
-- JWT generation
-- MFA
-- user accounts
-- skill profiles
+* authentication
+* JWT generation
+* MFA
+* user accounts
+* skill profiles
 
 Database:
 
-- identity_db
+* identity_db
 
 ---
 
@@ -60,13 +60,13 @@ Database:
 
 Responsible for:
 
-- session requests
-- session status updates
-- mentor/student session management
+* session requests
+* session status updates
+* mentor/student session management
 
 Database:
 
-- sessions_db
+* sessions_db
 
 ---
 
@@ -74,12 +74,12 @@ Database:
 
 Responsible for:
 
-- storing notifications
-- retrieving notifications
+* storing notifications
+* retrieving notifications
 
 Database:
 
-- notifications_db
+* notifications_db
 
 ---
 
@@ -100,3 +100,169 @@ Example header:
 
 ```text
 Authorization: Bearer <token>
+```
+
+---
+
+# How TOTP MFA Works
+
+TOTP MFA is implemented using pyotp.
+
+Flow:
+
+1. User requests MFA setup
+2. Secret key is generated
+3. QR code / secret is provided
+4. User scans with authenticator app
+5. User submits verification code
+6. MFA becomes enabled
+
+Supported apps:
+
+* Google Authenticator
+* Authy
+* Microsoft Authenticator
+
+---
+
+# Request ID Propagation
+
+Each request can include a request ID header for tracing across services.
+
+Example:
+
+```text
+X-Request-ID
+```
+
+This allows easier debugging and request tracking across microservices.
+
+---
+
+# Running With Docker Compose
+
+## Start project
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
+## Stop project
+
+```bash
+docker compose down
+```
+
+---
+
+# API Route Summary
+
+## Identity & Profile Service
+
+```text
+POST /api/v1/auth/register
+POST /api/v1/auth/login
+GET  /api/v1/auth/me
+
+POST /api/v1/mfa/setup
+POST /api/v1/mfa/verify
+POST /api/v1/mfa/disable
+
+POST /api/v1/profiles
+GET  /api/v1/profiles
+```
+
+---
+
+## Session Service
+
+```text
+POST  /api/v1/sessions
+GET   /api/v1/sessions
+PATCH /api/v1/sessions/{id}/status
+```
+
+---
+
+## Notification Service
+
+```text
+GET /api/v1/notifications/profile/{profile_id}
+```
+
+---
+
+# Nginx Routing Summary
+
+Nginx acts as the API gateway.
+
+Routing:
+
+```text
+/api/v1/auth/*           -> identity-profile-service
+/api/v1/profiles/*       -> identity-profile-service
+/api/v1/mfa/*            -> identity-profile-service
+
+/api/v1/sessions/*       -> session-service
+
+/api/v1/notifications/*  -> notification-service
+```
+
+Gateway URL:
+
+```text
+http://localhost:8080
+```
+
+---
+
+# Testing Instructions
+
+Tests use pytest.
+
+Run tests from inside each service directory.
+
+Example:
+
+```bash
+PYTHONPATH=. DATABASE_URL=sqlite:///./test.db python -m pytest
+```
+
+Services tested:
+
+* authentication
+* protected routes
+* session routes
+* notification routes
+
+---
+
+# CI/CD Summary
+
+GitHub Actions is used for CI.
+
+Pipeline automatically:
+
+* installs dependencies
+* runs pytest
+* validates pull requests
+* validates pushes to feature branches and main
+
+Workflow file:
+
+```text
+.github/workflows/ci.yml
+```
+
+---
+
+# Known Limitations
+
+* No frontend application yet
+* No async message broker
+* No distributed tracing system
+* No production deployment configuration
+* No refresh token flow
+* Limited test coverage
+* No Kubernetes deployment
